@@ -121,6 +121,17 @@ def main():
        print(f"Accuracy:{acc:.4f} | Precision:{prec:.4f} | Recall:{rec:.4f} | Binary F1:{f1_after:.4f}")
        print("Confusion Matrix:\n",cm)
 
+    #Print Comparison table
+    results_df = pd.DataFrame(results)
+    print("\n----Model Cmparison Table----")
+    print(results_df.to_string(index=False))
+
+    full_pipeline = Pipeline(steps=[
+        ('preprocessor',preprocessor),
+        ('classifier', LogisticRegression(random_state=42))
+    ])
+
+    #5-Fold stratified cross validation
     
      
 
