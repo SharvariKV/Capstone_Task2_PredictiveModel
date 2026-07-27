@@ -132,8 +132,43 @@ def main():
     ])
 
     #5-Fold stratified cross validation
+    cv_results = cross_validate(
+        full_pipeline,X_train, y_train, cv=5, scoring='f1', return_train_score=False
+    )
+
+    print("\n---5-Fold Stratified cv results(Logistic Regression)---")
+    print(f"Fold Scores: {np.round(cv_results['test_score'],4)}")
+    print(f"Mean F1 Score: {cv_results['test_score'].mean():.4f}")
+    print(f"Standard Deviation: {cv_results['test_score'].std():.4f}")
+
+    #Hyperparameter Grid Search
+    param_grid={
+        'classifier__C': [0.01,0.1,1.0,10.0],
+        'classifier__solver': ['liblinear', 'lbfgs']
+    }
+
+    grid_search = GridSearchCV(
+        estimator=full_pipeline,
+        param_grid=param_grid,
+        cv=5,
+        scoring='f1',
+        n_jobs=-1
+    )
+
+    grid_search.fit(X_train,y_train)
+
+    print(("\n---Hyperparameter Search Results---"))
+    print(f"Best Parameters: {grid_search.best_params_}")
+    print(f"Best Validation F1-Score:{grid_search.best_score_:.4f}")
+
+    #Final Evaluation on Held-Out Test Set
+    best_tuned_model = grid_search.best_estimator_
+    y_final_pred = best_tuned_model.predict(X_test)
+    final_f1 = f1_score(y_test, y_final_pred, pos_label=1)
+
+    print(f"Final Tuned Test Set F1-Score:{final_f1:.4f}")
     
-     
+
 
 
 
