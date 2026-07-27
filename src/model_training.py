@@ -167,11 +167,11 @@ def main():
     final_f1 = f1_score(y_test, y_final_pred, pos_label=1)
 
     print(f"Final Tuned Test Set F1-Score:{final_f1:.4f}")
-    
 
-
-
-
+    #Save final model
+    os.makedirs("models",exist_ok=True)
+    joblib.dump(best_tuned_model, "models/trained_model.pkl")
+    print("\nSaved best model artifact to models/trained_model.pkl")
 
 
 if __name__ == "__main__":
